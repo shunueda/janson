@@ -11,6 +11,7 @@
     "format": "biome format --write",
     "lint": "biome lint --write",
     "check": "biome check --write",
+    "commit": "git add . && cz",
     "script:readme": "tsx script/readme/index.ts"
   },
   "keywords": [],
@@ -21,6 +22,8 @@
     "@dotenvx/dotenvx": "^1.7.0",
     "@google/generative-ai": "^0.16.0",
     "@types/node": "^20.14.11",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "lefthook": "^1.7.12",
     "tsup": "^8.2.4",
     "tsx": "^4.17.0",

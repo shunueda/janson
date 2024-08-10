@@ -31,7 +31,7 @@ const contents = await Promise.all(
 const prompt = `
   I am creating a NPM library.
   Using the content from the files provided below, create a comprehensive ${README_FILE} in Markdown format.
-  Emphasize the additional features that this library provides.
+  Keep it simple and focus on the main features of the library.
   Do not include any extra characters like backticks; just output raw markdown text that can be easily copied and pasted. 
   The content for the files is provided below:
   
