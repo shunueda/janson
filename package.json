@@ -1,0 +1,30 @@
+{
+  "name": "janson",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc",
+    "build": "tsup",
+    "test": "tsx --test",
+    "test:watch": "tsx --test --watch",
+    "format": "biome format --write",
+    "lint": "biome lint --write",
+    "check": "biome check --write",
+    "script:readme": "tsx script/readme/index.ts"
+  },
+  "keywords": [],
+  "author": "Shun Ueda <me@shu.nu>",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@dotenvx/dotenvx": "^1.7.0",
+    "@google/generative-ai": "^0.16.0",
+    "@types/node": "^20.14.11",
+    "lefthook": "^1.7.12",
+    "tsup": "^8.2.4",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.3"
+  },
+  "packageManager": "pnpm@9.7.0"
+}

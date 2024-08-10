@@ -1,0 +1,29 @@
+name: Generate README.md
+on:
+  push:
+    branches:
+      - main
+jobs:
+  run-readme:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 20 ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v4
+      - run: corepack enable
+      - run: pnpm install
+      - run: curl -sfS https://dotenvx.sh/install.sh | sh
+      - run: dotenvx run -- pnpm script:readme
+        env:
+          DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(README.md): Update README.md"
+          commit_options: "--no-verify"
+          author_name: "GitHub Actions"
+          author_email: "me@shu.nu"
