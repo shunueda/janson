@@ -1,16 +1,17 @@
-# Janson: A JSON Serialization Library for TypeScript
+# Janson
 
-Janson is a lightweight and powerful TypeScript library designed to simplify JSON serialization and deserialization. It provides a set of decorators to enhance your classes and control how they're handled during JSON conversion.
+Janson is a lightweight and versatile JSON library for Node.js that empowers you to work seamlessly with JSON data. It simplifies parsing, stringifying, and transforming JSON, offering a streamlined experience for developers.
 
 ## Features
 
-* **Decorators for Fine-grained Control:**
-    * **`@JsonName`:** Rename properties in your JSON output.
-    * **`@JsonIgnore`:** Exclude properties from being serialized.
-    * **`@JsonSerialize`:** Customize the serialization process for specific properties.
-    * **`@JsonDeserialize`:** Apply custom logic when deserializing properties.
-* **Simple API:** Janson provides intuitive functions for parsing and stringifying JSON, making integration with your code effortless.
-* **TypeScript Compatibility:** Built with TypeScript, Janson offers type safety and code completion, leading to a smoother development experience.
+* **Effortless Parsing:** Parse JSON strings into JavaScript objects effortlessly with `Janson.parse()`.
+* **Flexible Stringification:** Convert JavaScript objects into JSON strings using `Janson.stringify()` with optional indentation for improved readability.
+* **Decorators for Enhanced Control:** Utilize decorators to refine the serialization and deserialization process:
+    * `@JsonName`: Customize property names in the resulting JSON.
+    * `@JsonIgnore`: Exclude specific properties from serialization.
+    * `@JsonSerialize`: Define custom transformations for serializing properties.
+    * `@JsonDeserialize`: Implement custom deserialization logic for specific properties.
+* **Comprehensive Test Coverage:** Janson is rigorously tested to ensure reliability and stability.
 
 ## Installation
 
@@ -20,68 +21,57 @@ npm install janson
 
 ## Usage
 
-### Basic Serialization
+### Parsing
 
-```typescript
-import Janson from 'janson';
+```javascript
+const jsonString = '{ "name": "John Doe", "age": 30 }';
+const jsonObject = Janson.parse(jsonString);
+
+console.log(jsonObject); // Output: { name: 'John Doe', age: 30 }
+```
+
+### Stringifying
+
+```javascript
+const person = { name: 'Jane Smith', age: 25 };
+const jsonString = Janson.stringify(person);
+
+console.log(jsonString); // Output: {"name":"Jane Smith","age":25}
+```
+
+### Decorators
+
+```javascript
+import Janson, { JsonName, JsonIgnore, JsonSerialize, JsonDeserialize } from 'janson';
 
 class Person {
+  @JsonName('first_name')
   firstName = 'John';
+
+  @JsonIgnore
   lastName = 'Doe';
+
+  @JsonSerialize(it => it.toUpperCase())
+  email = 'john.doe@example.com';
+
+  @JsonDeserialize(it => new Date(String(it)))
+  birthday: Date = new Date();
 }
 
 const person = new Person();
 const jsonString = Janson.stringify(person);
 
-console.log(jsonString); // Output: {"firstName":"John","lastName":"Doe"}
-```
-
-### Using Decorators
-
-```typescript
-import Janson, { JsonName, JsonIgnore, JsonSerialize } from 'janson';
-
-class Address {
-  @JsonName('street_address')
-  street = '123 Main St';
-
-  @JsonIgnore
-  city = 'Metropolis';
-
-  @JsonSerialize(it => it.toUpperCase())
-  zip = '12345';
-}
-
-const address = new Address();
-const addressJson = Janson.stringify(address);
-
-console.log(addressJson); // Output: {"street_address":"123 Main St","zip":"12345"} 
-```
-
-### Deserialization
-
-```typescript
-import Janson, { JsonDeserialize } from 'janson';
-
-class Person {
-  @JsonDeserialize(it => new Date(it))
-  birthday: Date = new Date();
-}
-
-const jsonString = '{"birthday":"2000-01-01T00:00:00"}';
-const person = Janson.parse(jsonString, Person);
-
-console.log(person.birthday); // Output: 2000-01-01T00:00:00.000Z
+console.log(jsonString); // Output: {"first_name":"John","email":"JOHN.DOE@EXAMPLE.COM","birthday":"2023-10-27T00:00:00.000Z"}
 ```
 
 ## Examples
 
-For more detailed examples and use cases, refer to the test files within this repository.
+Refer to the `test` directory in the repository for comprehensive examples demonstrating various use cases.
 
 ## Contributing
 
-Contributions are welcome! Feel free to submit pull requests, report issues, or suggest new features.
+Contributions are welcome! Please submit a pull request with clear and concise descriptions.
 
 ## License
 
-Janson is released under the MIT License.
+Janson is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
