@@ -6,13 +6,13 @@
   "scripts": {
     "typecheck": "tsc",
     "build": "tsup",
+    "build:readme": "dotenvx run -- tsx script/readme",
     "test": "tsx --test",
     "test:watch": "tsx --test --watch",
     "format": "biome format --write",
     "lint": "biome lint --write",
     "check": "biome check --write",
-    "commit": "git add . && cz",
-    "script:readme": "tsx script/readme/index.ts"
+    "commit": "git add . && cz"
   },
   "keywords": [],
   "author": "Shun Ueda <me@shu.nu>",

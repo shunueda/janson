@@ -4,12 +4,13 @@ on:
     branches:
       - main
 jobs:
-  run-readme:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [ 20 ]
     steps:
+      - uses: Kesin11/actions-timeline@v2
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -17,8 +18,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: corepack enable
       - run: pnpm install
-      - run: curl -sfS https://dotenvx.sh/install.sh | sh
-      - run: dotenvx run -- pnpm script:readme
+      - run: pnpm build:readme
         env:
           DOTENV_PRIVATE_KEY_CI: ${{ secrets.DOTENV_PRIVATE_KEY_CI }}
       - uses: stefanzweifel/git-auto-commit-action@v5
