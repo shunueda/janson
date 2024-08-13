@@ -1,17 +1,6 @@
 # Janson
 
-Janson is a lightweight JSON serialization and deserialization library for TypeScript. It provides decorators for controlling how your objects are transformed into JSON and back.
-
-## Features
-
-- **JSON Decorators:**
-    - `@JsonName`: Rename properties in your JSON output.
-    - `@JsonIgnore`: Exclude properties from JSON serialization.
-    - `@JsonSerialize`: Customize how properties are serialized into JSON.
-    - `@JsonDeserialize`: Customize how properties are deserialized from JSON.
-- **Simple API:**
-    - `Janson.stringify(object)`: Serializes an object into JSON.
-    - `Janson.parse(jsonString, Class)`: Deserializes a JSON string into an object of the given class.
+A simple library for parsing and stringifying JSON with decorators for easy customization.
 
 ## Installation
 
@@ -19,82 +8,66 @@ Janson is a lightweight JSON serialization and deserialization library for TypeS
 npm install janson
 ```
 
+## Features
+
+* **Parse JSON:**
+  * Parse JSON strings into JavaScript objects.
+* **Stringify JSON:**
+  * Stringify JavaScript objects into JSON strings.
+* **Decorators:**
+  * `@JsonName`: Rename a property in the output JSON.
+  * `@JsonIgnore`: Exclude a property from the output JSON.
+  * `@JsonDeserialize`:  Deserialize a property with a custom function.
+  * `@JsonSerialize`:  Serialize a property with a custom function.
+
 ## Usage
 
-```typescript
-import Janson, { JsonName, JsonIgnore, JsonSerialize, JsonDeserialize } from 'janson';
+```javascript
+import Janson, { JsonName, JsonIgnore, JsonDeserialize, JsonSerialize } from 'janson';
 
+// Simple example with decorators
 class Person {
   @JsonName('first_name')
-  firstName: string = 'John';
+  firstName = 'John';
 
   @JsonIgnore
-  lastName: string = 'Doe';
-
-  @JsonSerialize(it => it.toUpperCase())
-  fullName: string = 'John Doe';
-
-  @JsonDeserialize(it => new Date(it))
-  birthday: Date = new Date();
+  lastName = 'Doe';
 }
 
 const person = new Person();
 
-// Serializing to JSON
-const jsonString = Janson.stringify(person);
-// Output: { "first_name": "John", "fullName": "JOHN DOE" }
-
-// Deserializing from JSON
-const parsedPerson: Person = Janson.parse(jsonString, Person);
-```
-
-## Example
-
-```typescript
-import Janson, { JsonName } from 'janson';
-
-class Address {
-  @JsonName('street_address')
-  street: string = '123 Main St';
-
-  @JsonName('city')
-  city: string = 'New York';
-
-  @JsonName('zip_code')
-  zip: string = '10001';
-}
-
-class User {
-  @JsonName('first_name')
-  firstName: string = 'John';
-
-  @JsonName('last_name')
-  lastName: string = 'Doe';
-
-  @JsonName('address')
-  address: Address = new Address();
-}
-
-const user = new User();
-
-const json = Janson.stringify(user);
+// Stringify the object with decorators applied
+const json = Janson.stringify(person);
 
 // Output:
 // {
-//   "first_name": "John",
-//   "last_name": "Doe",
-//   "address": {
-//     "street_address": "123 Main St",
-//     "city": "New York",
-//     "zip_code": "10001"
-//   }
+//   "first_name": "John"
+// }
+
+// Deserialize a JSON string into an object with a custom function
+class DatePerson {
+  @JsonDeserialize(it => new Date(String(it)))
+  birthday: Date = new Date();
+}
+
+const jsonString = JSON.stringify({ birthday: '2000-01-01T00:00:00' });
+const datePerson = Janson.parse(jsonString, DatePerson);
+
+// Output:
+// {
+//   "birthday": new Date('2000-01-01T00:00:00')
 // }
 ```
 
-## Contributing
+## Examples
 
-Contributions are welcome! Please open an issue or submit a pull request.
+* [JsonName](test/decorators/JsonName.ts)
+* [JsonIgnore](test/decorators/JsonIgnore.ts)
+* [JsonDeserialize](test/decorators/JsonDeserialize.ts)
+* [JsonSerialize](test/decorators/JsonSerialize.ts)
+* [Parse JSON](test/json/parse.ts)
+* [Stringify JSON](test/json/stringify.ts)
 
 ## License
 
-MIT License
+MIT
