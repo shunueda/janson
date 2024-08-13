@@ -1,17 +1,17 @@
 # Janson
 
-Janson is a lightweight and versatile JSON library for Node.js that empowers you to work seamlessly with JSON data. It simplifies parsing, stringifying, and transforming JSON, offering a streamlined experience for developers.
+Janson is a lightweight JSON serialization and deserialization library for TypeScript. It provides decorators for controlling how your objects are transformed into JSON and back.
 
 ## Features
 
-* **Effortless Parsing:** Parse JSON strings into JavaScript objects effortlessly with `Janson.parse()`.
-* **Flexible Stringification:** Convert JavaScript objects into JSON strings using `Janson.stringify()` with optional indentation for improved readability.
-* **Decorators for Enhanced Control:** Utilize decorators to refine the serialization and deserialization process:
-    * `@JsonName`: Customize property names in the resulting JSON.
-    * `@JsonIgnore`: Exclude specific properties from serialization.
-    * `@JsonSerialize`: Define custom transformations for serializing properties.
-    * `@JsonDeserialize`: Implement custom deserialization logic for specific properties.
-* **Comprehensive Test Coverage:** Janson is rigorously tested to ensure reliability and stability.
+- **JSON Decorators:**
+    - `@JsonName`: Rename properties in your JSON output.
+    - `@JsonIgnore`: Exclude properties from JSON serialization.
+    - `@JsonSerialize`: Customize how properties are serialized into JSON.
+    - `@JsonDeserialize`: Customize how properties are deserialized from JSON.
+- **Simple API:**
+    - `Janson.stringify(object)`: Serializes an object into JSON.
+    - `Janson.parse(jsonString, Class)`: Deserializes a JSON string into an object of the given class.
 
 ## Installation
 
@@ -21,57 +21,80 @@ npm install janson
 
 ## Usage
 
-### Parsing
-
-```javascript
-const jsonString = '{ "name": "John Doe", "age": 30 }';
-const jsonObject = Janson.parse(jsonString);
-
-console.log(jsonObject); // Output: { name: 'John Doe', age: 30 }
-```
-
-### Stringifying
-
-```javascript
-const person = { name: 'Jane Smith', age: 25 };
-const jsonString = Janson.stringify(person);
-
-console.log(jsonString); // Output: {"name":"Jane Smith","age":25}
-```
-
-### Decorators
-
-```javascript
+```typescript
 import Janson, { JsonName, JsonIgnore, JsonSerialize, JsonDeserialize } from 'janson';
 
 class Person {
   @JsonName('first_name')
-  firstName = 'John';
+  firstName: string = 'John';
 
   @JsonIgnore
-  lastName = 'Doe';
+  lastName: string = 'Doe';
 
   @JsonSerialize(it => it.toUpperCase())
-  email = 'john.doe@example.com';
+  fullName: string = 'John Doe';
 
-  @JsonDeserialize(it => new Date(String(it)))
+  @JsonDeserialize(it => new Date(it))
   birthday: Date = new Date();
 }
 
 const person = new Person();
-const jsonString = Janson.stringify(person);
 
-console.log(jsonString); // Output: {"first_name":"John","email":"JOHN.DOE@EXAMPLE.COM","birthday":"2023-10-27T00:00:00.000Z"}
+// Serializing to JSON
+const jsonString = Janson.stringify(person);
+// Output: { "first_name": "John", "fullName": "JOHN DOE" }
+
+// Deserializing from JSON
+const parsedPerson: Person = Janson.parse(jsonString, Person);
 ```
 
-## Examples
+## Example
 
-Refer to the `test` directory in the repository for comprehensive examples demonstrating various use cases.
+```typescript
+import Janson, { JsonName } from 'janson';
+
+class Address {
+  @JsonName('street_address')
+  street: string = '123 Main St';
+
+  @JsonName('city')
+  city: string = 'New York';
+
+  @JsonName('zip_code')
+  zip: string = '10001';
+}
+
+class User {
+  @JsonName('first_name')
+  firstName: string = 'John';
+
+  @JsonName('last_name')
+  lastName: string = 'Doe';
+
+  @JsonName('address')
+  address: Address = new Address();
+}
+
+const user = new User();
+
+const json = Janson.stringify(user);
+
+// Output:
+// {
+//   "first_name": "John",
+//   "last_name": "Doe",
+//   "address": {
+//     "street_address": "123 Main St",
+//     "city": "New York",
+//     "zip_code": "10001"
+//   }
+// }
+```
 
 ## Contributing
 
-Contributions are welcome! Please submit a pull request with clear and concise descriptions.
+Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-Janson is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+MIT License
